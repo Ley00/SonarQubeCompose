@@ -1,0 +1,2 @@
+1 - Instal Docker: https://www.youtube.com/watch?v=Lgh8JgcYFwM
+2 - Instal SonarQube: https://www.youtube.com/watch?v=9FI3fv0yUMM
