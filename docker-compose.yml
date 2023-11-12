@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_PASSWORD: sonar
       POSTGRES_USER: sonar
-      POSTGRES_BD: sonar
+      POSTGRES_DB: sonar
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -33,6 +33,16 @@ services:
       - "9000:9000"
     networks:
       - sonar_network
+
+  sonar-scanner:
+    image: sonarsource/sonar-scanner-cli:latest
+    container_name: SonarScanner
+    volumes:
+      - .:/usr/src
+    networks:
+      - sonar_network
+    depends_on:
+      - sonarqube
 
 volumes:
   pgdata:
