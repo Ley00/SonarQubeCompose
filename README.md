@@ -9,7 +9,7 @@
 
 <p align="center">
   <a>
-    SonarQube Compose DockerFile for the purpose of uploading a complete machine configured to analyze jobs locally.
+    SonarQube Docker-Compose for the purpose of loading a complete machine configured to analyze jobs locally.
   </a>
 </p>
 
@@ -47,7 +47,7 @@ This docker-file presents all the tool configurations for using SonarQube.
 
 1. Clone this repo using `git clone git@github.com:Ley00/AppsAndroidiOSUWP-XamarinForms.git`
 2. Move yourself to the appropriate directory: `cd AppsAndroidiOSUWP-XamarinForms`<br />
-3. Instale o Docker em sua máquina;
+3. Install Docker on your machine;
 4. Run docker-compose.yml to download the images and create docker;
 5 - Command to Run Windows:
   ``` 
@@ -63,7 +63,7 @@ docker run --network=host `
    
 ou
 
-5 - Comando para executar linux:
+5 - Command to Run linux:
 ```
 docker run --network=host \
     --rm \
