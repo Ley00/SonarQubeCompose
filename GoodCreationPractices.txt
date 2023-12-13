@@ -1,0 +1,14 @@
+Boas práticas para criar o docker compose
+crie um arquivo com o nome docker-compose.yml
+acesse o link https://docs.docker.com/compose/compose-file/compose-versioning/ e pegue a última versão
+Crie a rede que os container irão trabalhar. Padrão colocar o nome do projeto principal-network
+nos serviços:
+  nome geral que pode ser usado como variavel depois;
+  nome da imagem;
+  nome do container que será criado;
+  variaveis de ambiente (ex: usuario e senha);
+  nome do container que será criado;
+  volumes(caso salve algum dado será necessário cria-la e nomea-la para facil gerenciamento);
+  portas caso precise;
+  rede criada anteriormente;
+por fim passe os volumes criado anteriormente para persistir.
