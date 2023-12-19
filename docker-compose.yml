@@ -1,7 +1,7 @@
-version: "1.0"
+version: "3.8"
 
 networks:
-  sonar_network:
+  network_sonar:
 
 services:
   postgres:
@@ -12,11 +12,17 @@ services:
       POSTGRES_USER: sonar
       POSTGRES_DB: sonar
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /YourFouder/Postgres/Data:/var/lib/postgresql/data
+      - /YourFouder/Postgres/Config:/var/lib/postgresql
     ports:
       - "5432:5432"
     networks:
-      - sonar_network
+      - network_sonar
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
 
   sonarqube:
     image: sonarqube
@@ -26,25 +32,33 @@ services:
       sonar.jdbc.password: sonar
       sonar.jdbc.url: jdbc:postgresql://postgres/sonar
     volumes:
-      - SonarQube-conf:/opt/sonarqube/data
-      - sonarqube-conf:/opt/sonarqube/logs
-      - sonarqube-conf:/opt/sonarqube/extensions
+      - /YourFouder/SonarQube/data:/opt/SonarQube/data
+      - /YourFouder/SonarQube/logs:/opt/SonarQube/logs
+      - /YourFouder/SonarQube/extensions:/opt/SonarQube/extensions
+      - /YourFouder/SonarQube/plugins:/opt/sonarqube/lib/bundled-plugins
     ports:
       - "9000:9000"
     networks:
-      - sonar_network
+      - network_sonar
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
 
   sonar-scanner:
     image: sonarsource/sonar-scanner-cli:latest
     container_name: SonarScanner
     volumes:
-      - .:/usr/src
+      - /YourFouder/Scanner:/opt/sonar/scanner/workspace
     networks:
-      - sonar_network
+      - network_sonar
     depends_on:
       - sonarqube
-
-volumes:
-  pgdata:
-  SonarQube-conf:
-  sonarqube-conf:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
