@@ -26,7 +26,7 @@
 
 <hr />
 
-## Features
+# Features
 
 This docker-file presents all the tool configurations for using SonarQube.
 
@@ -43,58 +43,113 @@ This docker-file presents all the tool configurations for using SonarQube.
 - 📄 **MongoDB** — A cross-platform and open-source document-oriented database
 - ♻️ **Socket IO** — A library for realtime web applications -->
 
-## Getting started
+# Getting started
 
-1. Clone this repo using `git clone git@github.com:Ley00/AppsAndroidiOSUWP-XamarinForms.git`
-2. Move yourself to the appropriate directory: `cd AppsAndroidiOSUWP-XamarinForms`<br />
-3. Install Docker on your machine;
-4. Run docker-compose.yml to download the images and create docker;
-5 - Command to Run Windows:
-  ``` 
-docker run --network=host `
-    --rm `
-    -e SONAR_HOST_URL="http://localhost:9000" `
-    -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=Projeto-Teste" `
-    -e SONAR_TOKEN="sqp_865b5dd48f297d29f47f328cd89fddec16c897cc" `
-    -v "${PWD}:/usr/src" `
-    sonarsource/sonar-scanner-cli -X
+## Tutorial: Creating a Docker Compose with Good Practices
+In this tutorial, we will create a Docker Compose file following best practices. We will create an environment for SonarQube, using a PostgreSQL database and a scanner for code analysis.
 
-  ```
-   
-ou
-
-5 - Command to Run linux:
+### **Step 1**: Create the Docker Compose file
+Create a new file called docker-compose.yml in the desired directory. You can use any text editor for this. Make sure the file has read and write permissions.
 ```
-docker run --network=host \
-    --rm \
-    -e SONAR_HOST_URL="http://127.0.0.1:9000" \
-    -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=Projeto-Teste" \
-    -e SONAR_TOKEN="sqp_6800ce2b7828abb5b9d0089ddb2cccd293b623b9" \
-    -v "${PWD}:/usr/src" \
-    sonarsource/sonar-scanner-cli -X
+version: "3.8"
+
+networks:
+   main-network:
+
+services:
+   postgres:
+     image: postgres
+     container_name: MyPostgres
+     environment:
+       POSTGRES_PASSWORD: mypassword
+       POSTGRES_USER: myuser
+       POSTGRES_DB: mydatabase
+     volumes:
+       - /path/to/postgres/data:/var/lib/postgresql/data
+     ports:
+       - "5432:5432"
+     networks:
+       - main-network
+     deploy:
+       resources:
+         limits:
+           CPU: '1'
+           memory: 512M
+
+   sonarqube:
+     image: sonarqube
+     container_name: MySonarQube
+     environment:
+       sonar.jdbc.username: sonar
+       sonar.jdbc.password: sonar
+       sonar.jdbc.url: jdbc:postgresql://postgres/mydatabase
+     volumes:
+       - /path/to/sonarqube/data:/opt/SonarQube/data
+       - /path/to/sonarqube/logs:/opt/SonarQube/logs
+       - /path/to/sonarqube/extensions:/opt/SonarQube/extensions
+       - /path/to/sonarqube/plugins:/opt/sonarqube/lib/bundled-plugins
+     ports:
+       - "9000:9000"
+     networks:
+       - main-network
+     depends_on:
+       - postgres
+     deploy:
+       resources:
+         limits:
+           CPU: '1'
+           memory: 768M
+
+   sonar-scanner:
+     image: sonarsource/sonar-scanner-cli:latest
+     container_name: MySonarScanner
+     volumes:
+       - /path/to/scanner/workspace:/opt/sonar/scanner/workspace
+     networks:
+       - main-network
+     depends_on:
+       - sonarqube
+     deploy:
+       resources:
+         limits:
+           CPU: '1'
+           memory: 512M
+
 ```
-    
-<!--3. Run `yarn` to install dependencies<br />
-4. Run `lerna bootstrap` to install the packages dependecies-->
+This example sets up a basic environment with PostgreSQL, SonarQube, and a scanner for code analysis. Remember to replace /path/to with the desired directory paths on your system.
 
-<!--### Getting started with the backend server
 
-1. Move yourself to the backend folder: `cd backend`
-2. Create a `.env` file and add the MongoDB url connection in MONGO_URL field
-3. Run `yarn dev` to start the server
+### **Step 2**: Configure the Network
+Make sure you create a network for your containers. In the example, we use the network called main-network. Be sure to replace main-network with a name that is meaningful to your project.
 
-### Getting started with the frontend app
+```
+networks:
+   main-network:
+```
 
-1. Move yourself to the frontend folder: `cd frontend`
-2. Run `yarn start` to start the web application
 
-### Getting started with the mobile app
+### **Step 3**: Customize Services
+For each service, customize the following items to your needs:
 
-1. Move yourself to the mobile folder: `cd mobile`
-2. Run `react-native run-ios` (or `run-android` if your prefer) to start the mobile app
+  - **container_name:** Choose meaningful names for containers.
+  
+  - **environment:** Configure environment variables as needed.
+  
+  - **volumes:** Point to the directories where you want to store persistent data.
+  
+  - **ports:** Map ports as needed.
+  
+  - **deploy:** Customize service resources such as CPUs and memory.
 
-Note: If you choose to start the mobile app in the android emulator, you will have to start the emulator before using
-the `run-android` command.-->
+
+### **Step 4**: Run Docker Compose
+After configuring the Docker Compose file, save it and run the following command in the same directory:
+
+```
+docker-compose up -d
+```
+
+This will start the services defined in the Docker Compose file in the background (-d). Make sure Docker Compose is installed on your system.
 
 ## License
 [![NPM](https://img.shields.io/npm/l/react)](https://github.com/Ley00/SonarQubeCompose/blob/main/LICENSE)
