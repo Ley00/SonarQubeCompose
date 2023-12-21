@@ -70,6 +70,7 @@ services:
        - "5432:5432"
      networks:
        - main-network
+     privileged: true
      deploy:
        resources:
          limits:
@@ -94,6 +95,7 @@ services:
        - main-network
      depends_on:
        - postgres
+     privileged: true
      deploy:
        resources:
          limits:
@@ -109,6 +111,7 @@ services:
        - main-network
      depends_on:
        - sonarqube
+     privileged: true
      deploy:
        resources:
          limits:
@@ -140,6 +143,8 @@ For each service, customize the following items to your needs:
   - **ports:** Map ports as needed.
   
   - **deploy:** Customize service resources such as CPUs and memory.
+
+  - **privileged:** Privileged mode has security implications.
 
 
 ### **Step 4**: Run Docker Compose
