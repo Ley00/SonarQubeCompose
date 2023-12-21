@@ -18,6 +18,7 @@ services:
       - "5432:5432"
     networks:
       - network_sonar
+    privileged: true
     deploy:
       resources:
         limits:
@@ -42,6 +43,7 @@ services:
       - network_sonar
     depends_on:
       - postgres
+    privileged: true
     deploy:
       resources:
         limits:
@@ -57,6 +59,7 @@ services:
       - network_sonar
     depends_on:
       - sonarqube
+    privileged: true
     deploy:
       resources:
         limits:
